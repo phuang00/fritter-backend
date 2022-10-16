@@ -12,7 +12,7 @@
   }
   
   function viewSearchesByUser(fields) {
-    fetch(`/api/searches?user=${fields.user}`)
+    fetch(`/api/searches?author=${fields.user}`)
       .then(showResponse)
       .catch(showResponse);
   }
@@ -35,7 +35,7 @@
       .catch(showResponse);
   }
 
-  function deleteSearchesByUser(fields) {
+  function deleteSearches(fields) {
     fetch(`/api/searches`, {method: 'DELETE'})
       .then(showResponse)
       .catch(showResponse);

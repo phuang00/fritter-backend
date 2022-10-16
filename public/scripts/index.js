@@ -42,9 +42,8 @@ const formsAndHandlers = {
   'view-all-searches': viewAllSearches,
   'view-searches-by-user': viewSearchesByUser,
   'create-search': createSearch,
-  'edit-search': editSearch,
   'delete-search': deleteSearch,
-  'delete-searches-by-user': deleteSearchesByUser,
+  'delete-searches': deleteSearches,
 };
 
 // Attach handlers to forms
