@@ -313,3 +313,261 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in
+
+#### `GET /api/lists` - Get all the lists
+
+**Returns**
+- An array of lists sorted in increasing alphabetical order by list name
+
+#### `GET /api/lists?owner=USERNAME` - Get lists by owner
+
+**Returns**
+- An array of lists created by user with username `owner`
+
+**Throws**
+- `400` if `owner` is not given
+- `404` if `owner` is not a recognized username of any user
+
+#### `GET /api/lists?keyboard=KEYWORD` - Get lists by keyword
+
+**Returns**
+- An array of lists with `keyword` in the list name
+
+**Throws**
+- `400` if `keyword` is not given
+
+#### `POST /api/lists` - Create a new list
+
+**Body**
+
+- `name` _{string}_ - The name of the list
+- `privacy` _{enum}_ - Whether the list is public or private
+
+**Returns**
+
+- A success message
+- A object with the created list
+
+**Throws**
+
+- `403` if the user is not logged in
+- `400` if the list name is empty or a stream of empty spaces
+- `400` if the user already has a list of the same name
+- `413` if the list name is more than 25 characters long
+
+#### `DELETE /api/lists/:listId?` - Delete an existing list
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the freet
+- `404` if the listId is invalid
+
+#### `PUT /api/lists/:listId?` - Update an existing list
+
+**Body** _(no need to add fields that are not being changed)_
+
+- `name` _{string}_ - The new name of the list
+- `privacy` _{enum}_ - The new privacy setting of the list
+- `members` _{List\[Set\]}_ - The new set of members in the list
+
+**Returns**
+
+- A success message
+- An object with the updated list
+
+**Throws**
+- `403` if the user is not logged in
+- `404` if the listId is invalid
+- `403` if the user is not the owner of the list
+- `400` if the new list name is empty or a stream of empty spaces
+- `400` if the new list name is already taken
+- `413` if the new list name is more than 25 characters long
+
+#### `GET /api/highlights` - Get all the highlights
+
+**Returns**
+
+- An array of all the highlights sorted in descending order by date modified
+
+#### `GET /api/highlights?user=USERNAME` - Get highlights by user
+
+**Returns**
+
+- An array of highlights created by user with username `user`
+
+**Throws**
+
+- `400` if `user` is not given
+- `404` if `user` is not a recognized username of any user
+
+#### `POST /api/highlights` - Create a new highlight
+
+**Body**
+
+- `freetId` - The freetId of the associated freet
+- `status` _{boolean}_ - whether the freet is highlighted or not
+
+**Returns**
+
+- A success message
+- A object with the created highlight
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the `freetId` is invalid
+
+#### `DELETE /api/highlights/:freetId?` - Delete an existing highlight
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the highlight
+- `404` if the freetId is invalid
+
+#### `PUT /api/highlights/:freetId?` - Update an existing highlight
+
+**Body**
+
+- `status` _{boolean}_ - the new status of the highlight
+
+**Returns**
+
+- A success message
+- An object with the updated highlight
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the highlight
+- `404` if the freetId is invalid
+
+#### `GET /api/presets` - Get all the notification presets
+
+**Returns**
+
+- An array of all notification presets sorted in increasing alphabetical order by preset name
+
+#### `GET /api/presets?owner=USERNAME` - Get notification presets by owner
+
+**Throws**
+
+- `400` if `owner` is not given
+- `404` if `owner` is not a recognized username of any user
+
+#### `POST /api/presets` - Create a new notification preset
+
+**Body**
+
+- `name` _{string} - The name of the preset
+- `members` _{Set\[User\]}_ - The users the preset applies to
+- `setting` _{Map\[string, boolean\]}_ - The settings of the preset
+
+**Returns**
+
+- A success message
+- A object with the created preset
+
+**Throws**
+
+- `403` if the user is not logged in
+- `400` if the preset name is empty or a stream of empty spaces
+- `400` if the preset name is already taken
+- `413` if the preset name is more than 25 characters long
+- `400` if the preset settings is invalid
+
+#### `DELETE /api/presets/:presetId?` - Delete an existing notification preset
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the preset
+- `404` if the presetId is invalid
+
+#### `PUT /api/presets/:presetId?` - Update an existing notification preset
+
+**Body**
+
+- `name` _{string} - The name of the preset
+- `members` _{Set\[User\]}_ - The users the preset applies to
+- `setting` _{Map\[string, boolean\]}_ - The settings of the preset
+
+**Returns**
+
+- A success message
+- An object with the updated preset
+
+**Throws**
+
+- `403` if the user is not logged in
+- `400` if the preset name is empty or a stream of empty spaces
+- `400` if the preset name is already taken
+- `413` if the preset name is more than 25 characters long
+- `400` if the preset settings is invalid
+
+#### `GET /api/searches` - Get all searches
+
+- An array of all searches sorted in descending order by date searched
+
+#### `GET /api/searches?user=USERNAME` - Get searches by user
+
+**Returns**
+
+- An array of searches searched by user with username `user`
+
+**Throws**
+
+- `400` if `user` is not given
+- `404` if `user` is not a recognized username of any user
+
+#### `POST /api/searches` - Create a new search
+
+**Body**
+
+- `input` _{string}_ - The search input
+
+**Returns**
+- A success message
+- A object with the created search
+
+**Throws**
+
+- `403` if user is not logged in
+- `400` if the search input is empty or a stream of empty spaces
+- `413` if the search input is more than 25 characters long
+
+#### `DELETE \api\searches\:searchId?` - Delete an existing search
+
+**Returns**
+
+- A success message
+
+**Throws**
+- `403` if the user is not logged in
+- `403` if the user is not the one who initiated the search
+- `400` if the searchId is invalid
+
+#### `DELETE \api\searches\:username?` - Delete all existing searches for user
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the username is invalid
+- `403` if the user's username is not `username`
