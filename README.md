@@ -549,7 +549,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `400` if the search input is empty or a stream of empty spaces
 - `413` if the search input is more than 25 characters long
 
-#### `DELETE \api\searches\:searchId?` - Delete an existing search
+#### `DELETE /api/searches/:searchId?` - Delete an existing search
 
 **Returns**
 
@@ -560,7 +560,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not the one who initiated the search
 - `400` if the searchId is invalid
 
-#### `DELETE \api\searches\:username?` - Delete all existing searches for user
+#### `DELETE /api/searches/:username?` - Delete all existing searches for user
 
 **Returns**
 

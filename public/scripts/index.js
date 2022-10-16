@@ -38,7 +38,13 @@ const formsAndHandlers = {
   'view-freets-by-author': viewFreetsByAuthor,
   'create-freet': createFreet,
   'edit-freet': editFreet,
-  'delete-freet': deleteFreet
+  'delete-freet': deleteFreet,
+  'view-all-searches': viewAllSearches,
+  'view-searches-by-user': viewSearchesByUser,
+  'create-search': createSearch,
+  'edit-search': editSearch,
+  'delete-search': deleteSearch,
+  'delete-searches-by-user': deleteSearchesByUser,
 };
 
 // Attach handlers to forms
