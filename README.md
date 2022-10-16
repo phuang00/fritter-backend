@@ -468,7 +468,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Body**
 
-- `name` _{string} - The name of the preset
+- `name` _{string}_ - The name of the preset
 - `members` _{Set\[User\]}_ - The users the preset applies to
 - `setting` _{Map\[string, boolean\]}_ - The settings of the preset
 
@@ -501,7 +501,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Body**
 
-- `name` _{string} - The name of the preset
+- `name` _{string}_ - The name of the preset
 - `members` _{Set\[User\]}_ - The users the preset applies to
 - `setting` _{Map\[string, boolean\]}_ - The settings of the preset
 
