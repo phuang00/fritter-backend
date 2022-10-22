@@ -153,6 +153,28 @@ const isAuthorExists = async (req: Request, res: Response, next: NextFunction) =
   next();
 };
 
+/**
+ * Checks if a user with userId as user id in req.params exists
+ */
+const isUserExists = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.params.user) {
+    res.status(400).json({
+      error: 'Provided user username must be nonempty.'
+    });
+    return;
+  }
+
+  const user = await UserCollection.findOneByUsername(req.params.user as string);
+  if (!user) {
+    res.status(404).json({
+      error: `A user with username ${req.query.author as string} does not exist.`
+    });
+    return;
+  }
+
+  next();
+};
+
 export {
   isCurrentSessionUserExists,
   isUserLoggedIn,
@@ -160,6 +182,7 @@ export {
   isUsernameNotAlreadyInUse,
   isAccountExists,
   isAuthorExists,
+  isUserExists,
   isValidUsername,
   isValidPassword
 };

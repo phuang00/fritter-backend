@@ -73,12 +73,22 @@ class SearchCollection {
   }
 
   /**
-   * Delete all the searches by the given user
+   * Delete all the searches by the given userId
    *
    * @param {string} userId - The id of user whose searches to delete
    */
   static async deleteMany(userId: Types.ObjectId | string): Promise<void> {
     await SearchModel.deleteMany({userId});
+  }
+
+  /**
+   * Delete all the searches by the given username
+   *
+   * @param {string} username - The username of user whose searches to delete
+   */
+   static async deleteManybyUsername(username: string): Promise<void> {
+    const user = await UserCollection.findOneByUsername(username);
+    await SearchModel.deleteMany({userId: user._id});
   }
 }
 

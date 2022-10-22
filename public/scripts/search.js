@@ -35,8 +35,8 @@
       .catch(showResponse);
   }
 
-  function deleteSearches(fields) {
-    fetch(`/api/searches`, {method: 'DELETE'})
+  function deleteSearchesByUser(fields) {
+    fetch(`/api/searches/user/${fields.user}`, {method: 'DELETE'})
       .then(showResponse)
       .catch(showResponse);
   }

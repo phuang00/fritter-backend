@@ -1,5 +1,6 @@
 import type {Request, Response, NextFunction} from 'express';
 import {Types} from 'mongoose';
+import UserCollection from '../user/collection';
 import SearchCollection from '../search/collection';
 
 /**
@@ -59,8 +60,25 @@ const isValidSearchModifier = async (req: Request, res: Response, next: NextFunc
   next();
 };
 
+/**
+ * Checks if the current user is the user whose searches we are trying to delete
+ */
+const isValidSearchDeleter = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserCollection.findOneByUsername(req.params.user)
+  const userId = user._id;
+  if (req.session.userId !== userId.toString()) {
+    res.status(403).json({
+      error: 'Cannot delete other users\' searches.'
+    });
+    return;
+  }
+
+  next();
+};
+
 export {
   isValidSearchContent,
   isSearchExists,
-  isValidSearchModifier
+  isValidSearchModifier,
+  isValidSearchDeleter
 };

@@ -77,14 +77,6 @@ router.post(
 );
 
 /**
- * Delete all searches for user
- *
- * @name DELETE /api/searches/
- *
- * @return {string} - A success message
- * @throws {403} - If the user is not logged in
- */
-/**
  * Delete a search
  *
  * @name DELETE /api/searches/:id
@@ -95,23 +87,7 @@ router.post(
  * @throws {404} - If the searchId is not valid
  */
 router.delete(
-  '/',
-  [
-    userValidator.isUserLoggedIn,
-  ],
-  async (req: Request, res: Response, next: NextFunction) => {
-    // Check if authorId query parameter was supplied
-    if (req.params.searchId !== undefined) {
-      next();
-      return;
-    }
-
-    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    await SearchCollection.deleteMany(userId);
-    res.status(200).json({
-      message: 'Your searches were deleted successfully.'
-    });
-  },
+  '/:searchId?',
   [
     userValidator.isUserLoggedIn,
     searchValidator.isSearchExists,
@@ -121,6 +97,30 @@ router.delete(
     await SearchCollection.deleteOne(req.params.searchId);
     res.status(200).json({
       message: 'Your search was deleted successfully.'
+    });
+  }
+);
+
+/**
+ * Delete all searches for user
+ *
+ * @name DELETE /api/searches/user/:userId
+ *
+ * @return {string} - A success message
+ * @throws {403} - If the user is not logged in
+*/
+router.delete(
+  '/user/:user?',
+  [
+    userValidator.isUserLoggedIn,
+    userValidator.isUserExists,
+    searchValidator.isValidSearchDeleter
+  ],
+  async (req: Request, res: Response) => {
+    const username = (req.params.user as string) ?? ''; // Will not be an empty string since its validated in isUserExists
+    await SearchCollection.deleteManybyUsername(username);
+    res.status(200).json({
+      message: 'Your searches were deleted successfully.'
     });
   }
 );
