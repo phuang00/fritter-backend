@@ -319,22 +319,14 @@ This renders the `index.html` file that will be used to interact with the backen
 **Returns**
 - An array of lists sorted in increasing alphabetical order by list name
 
-#### `GET /api/lists?owner=USERNAME` - Get lists by owner
+#### `GET /api/lists?author=USERNAME` - Get lists by owner
 
 **Returns**
-- An array of lists created by user with username `owner`
+- An array of lists created by user with username `author`
 
 **Throws**
 - `400` if `owner` is not given
 - `404` if `owner` is not a recognized username of any user
-
-#### `GET /api/lists?keyboard=KEYWORD` - Get lists by keyword
-
-**Returns**
-- An array of lists with `keyword` in the list name
-
-**Throws**
-- `400` if `keyword` is not given
 
 #### `POST /api/lists` - Create a new list
 
@@ -392,18 +384,18 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Returns**
 
-- An array of all the highlights sorted in descending order by date modified
+- An array of all the highlights.
 
-#### `GET /api/highlights?user=USERNAME` - Get highlights by user
+#### `GET /api/highlights?author=USERNAME` - Get highlights by user
 
 **Returns**
 
-- An array of highlights created by user with username `user`
+- An array of highlights created by user with username `author`
 
 **Throws**
 
-- `400` if `user` is not given
-- `404` if `user` is not a recognized username of any user
+- `400` if `author` is not given
+- `404` if `author` is not a recognized username of any user
 
 #### `POST /api/highlights` - Create a new highlight
 
@@ -522,16 +514,16 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - An array of all searches sorted in descending order by date searched
 
-#### `GET /api/searches?user=USERNAME` - Get searches by user
+#### `GET /api/searches?author=USERNAME` - Get searches by user
 
 **Returns**
 
-- An array of searches searched by user with username `user`
+- An array of searches searched by user with username `author`
 
 **Throws**
 
-- `400` if `user` is not given
-- `404` if `user` is not a recognized username of any user
+- `400` if `author` is not given
+- `404` if `author` is not a recognized username of any user
 
 #### `POST /api/searches` - Create a new search
 

@@ -107,7 +107,8 @@ router.delete(
  * @name DELETE /api/searches/user/:userId
  *
  * @return {string} - A success message
- * @throws {403} - If the user is not logged in
+ * @throws {403} - If the user is not logged in or is not the creator of 
+ *                 the search
 */
 router.delete(
   '/user/:user?',
@@ -118,7 +119,7 @@ router.delete(
   ],
   async (req: Request, res: Response) => {
     const username = (req.params.user as string) ?? ''; // Will not be an empty string since its validated in isUserExists
-    await SearchCollection.deleteManybyUsername(username);
+    await SearchCollection.deleteManyByUsername(username);
     res.status(200).json({
       message: 'Your searches were deleted successfully.'
     });

@@ -157,17 +157,18 @@ const isAuthorExists = async (req: Request, res: Response, next: NextFunction) =
  * Checks if a user with userId as user id in req.params exists
  */
 const isUserExists = async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.params.user) {
+  const username = req.params.author ? req.params.author : req.params.user;
+  if (!username) {
     res.status(400).json({
       error: 'Provided user username must be nonempty.'
     });
     return;
   }
 
-  const user = await UserCollection.findOneByUsername(req.params.user as string);
+  const user = await UserCollection.findOneByUsername(username);
   if (!user) {
     res.status(404).json({
-      error: `A user with username ${req.query.author as string} does not exist.`
+      error: `A user with username ${username} does not exist.`
     });
     return;
   }

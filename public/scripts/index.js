@@ -44,6 +44,14 @@ const formsAndHandlers = {
   'create-search': createSearch,
   'delete-search': deleteSearch,
   'delete-searches': deleteSearchesByUser,
+  'view-all-highlights': viewAllHighlights,
+  'view-highlights-by-author': viewHighlightsByAuthor,
+  'create-highlight': createHighlight,
+  'update-highlight': updateHighlight,
+  'update-highlight-by-freet': updateHighlightByFreet,
+  'delete-highlight': deleteHighlight,
+  'delete-highlight-by-freet': deleteHighlightByFreet,
+  'delete-highlights': deleteHighlightsByUser,
 };
 
 // Attach handlers to forms
