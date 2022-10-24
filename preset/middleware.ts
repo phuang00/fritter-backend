@@ -1,17 +1,18 @@
 import type {Request, Response, NextFunction} from 'express';
 import {Types} from 'mongoose';
-import FreetCollection from '../freet/collection';
+import UserCollection from '../user/collection';
+import PresetCollection from '../preset/collection';
 
 /**
- * Checks if a freet with freetId is req.params exists
+ * Checks if a preset with presetId is req.params exists
  */
-const isFreetExists = async (req: Request, res: Response, next: NextFunction) => {
-  const validFormat = Types.ObjectId.isValid(req.params.freetId);
-  const freet = validFormat ? await FreetCollection.findOne(req.params.freetId) : '';
-  if (!freet) {
+const isPresetExists = async (req: Request, res: Response, next: NextFunction) => {
+  const validFormat = Types.ObjectId.isValid(req.params.presetId);
+  const preset = validFormat ? await PresetCollection.findOne(req.params.presetId) : '';
+  if (!preset) {
     res.status(404).json({
       error: {
-        freetNotFound: `Freet with freet ID ${req.params.freetId} does not exist.`
+        presetNotFound: `Preset with preset ID ${req.params.presetId} does not exist.`
       }
     });
     return;
@@ -21,21 +22,13 @@ const isFreetExists = async (req: Request, res: Response, next: NextFunction) =>
 };
 
 /**
- * Checks if the content of the freet in req.body is valid, i.e not a stream of empty
- * spaces and not more than 140 characters
+ * Checks if all the contents of the preset in req.body is given
  */
-const isValidFreetContent = (req: Request, res: Response, next: NextFunction) => {
-  const {content} = req.body as {content: string};
-  if (!content.trim()) {
-    res.status(400).json({
-      error: 'Freet content must be at least one character long.'
-    });
-    return;
-  }
-
-  if (content.length > 140) {
-    res.status(413).json({
-      error: 'Freet content must be no more than 140 characters.'
+ const isPresetContentsNonempty = (req: Request, res: Response, next: NextFunction) => {
+  const {name, members, freetSetting, highlightSetting} = req.body as {name: string, members: Array<string>, freetSetting: string, highlightSetting: string};
+  if (!(name.trim() && members && freetSetting && highlightSetting)) {
+    res.status(404).json({
+      error: 'Preset content (name/members/setting) is missing.'
     });
     return;
   }
@@ -44,14 +37,105 @@ const isValidFreetContent = (req: Request, res: Response, next: NextFunction) =>
 };
 
 /**
- * Checks if the current user is the author of the freet whose freetId is in req.params
+ * Checks if the contents of the preset in req.body is valid
  */
-const isValidFreetModifier = async (req: Request, res: Response, next: NextFunction) => {
-  const freet = await FreetCollection.findOne(req.params.freetId);
-  const userId = freet.authorId._id;
-  if (req.session.userId !== userId.toString()) {
+const isValidPresetContents = async (req: Request, res: Response, next: NextFunction) => {
+  const {name, members, freetSetting, highlightSetting} = req.body as {name: string, members: string, freetSetting: string, highlightSetting: string};
+  if (name) {
+    if (!name.trim()) {
+      res.status(400).json({
+        error: 'Preset name must be at least one character long.'
+      });
+      return;
+    }
+
+    if (name.trim().length > 25) {
+      res.status(413).json({
+        error: 'Preset name must be no more than 25 characters.'
+      });
+      return;
+    }
+  }
+
+  if (members) {
+    for (const member of members.split('\n')) {
+      const user = await UserCollection.findOneByUsername(member);
+      if (!user) {
+        res.status(404).json({
+          error: {
+            userNotFound: `Member with username ${member} does not exist.`
+          }
+        });
+        return;
+      }
+      if (user._id.toString() === req.session.userId) {
+        res.status(403).json({
+          error: 'Cannot add yourself to your own preset.'
+        });
+        return;
+      }
+    }
+  }
+
+  if ((freetSetting && !highlightSetting) || (!freetSetting && highlightSetting)) {
+    res.status(404).json({
+      error: 'Preset settings cannot be partially filled.'
+    });
+    return;
+  }
+
+  if (freetSetting) {
+    if (freetSetting !== 'true' && freetSetting !== 'false') {
+      res.status(400).json({
+        error: 'Preset settings must be either true or false.'
+      });
+      return;
+    }
+  }
+
+  if (highlightSetting) {
+    if (freetSetting !== 'true' && freetSetting !== 'false') {
+      res.status(400).json({
+        error: 'Preset settings must be either true or false.'
+      });
+      return;
+    }
+  }
+
+  next();
+};
+
+/**
+ * Checks if the current user is the owner of the preset whose presetId is in req.params
+ */
+const isValidPresetModifier = async (req: Request, res: Response, next: NextFunction) => {
+  const preset = await PresetCollection.findOne(req.params.presetId);
+  const ownerId = preset.ownerId._id;
+  if (req.session.userId !== ownerId.toString()) {
     res.status(403).json({
-      error: 'Cannot modify other users\' freets.'
+      error: 'Cannot modify other users\' presets.'
+    });
+    return;
+  }
+
+  next();
+};
+
+/**
+ * Checks if a preset with presetName as name in req.body exists
+ */
+ const isPresetNameExists = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.body.name) {
+    res.status(400).json({
+      error: 'Provided preset name must be nonempty.'
+    });
+    return;
+  }
+
+  const preset = await PresetCollection.findOneByPresetName(req.session.userId, req.body.name as string);
+  if (preset) {
+    res.status(404).json({
+      error: `A preset with preset name ${req.body.name as string} already exists.`
     });
     return;
   }
@@ -60,7 +144,9 @@ const isValidFreetModifier = async (req: Request, res: Response, next: NextFunct
 };
 
 export {
-  isValidFreetContent,
-  isFreetExists,
-  isValidFreetModifier
+  isPresetNameExists,
+  isPresetExists,
+  isPresetContentsNonempty,
+  isValidPresetContents,
+  isValidPresetModifier,
 };

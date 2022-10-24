@@ -3,54 +3,55 @@ import {Schema, model} from 'mongoose';
 import type {User} from '../user/model';
 
 /**
- * This file defines the properties stored in a Freet
+ * This file defines the properties stored in a Notification Preset
  * DO NOT implement operations here ---> use collection file
  */
 
-// Type definition for Freet on the backend
-export type Freet = {
+// Type definition for Preset on the backend
+export type Preset = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
-  authorId: Types.ObjectId;
-  dateCreated: Date;
-  content: string;
-  dateModified: Date;
+  ownerId: Types.ObjectId;
+  name: string;
+  members: [Types.ObjectId];
+  setting: Types.Map<boolean>;
 };
 
-export type PopulatedFreet = {
+export type PopulatedPreset = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
-  authorId: User;
-  dateCreated: Date;
-  content: string;
-  dateModified: Date;
+  ownerId: User;
+  name: string;
+  members: [User];
+  setting: Types.Map<boolean>;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
-// Freets stored in this table will have these fields, with the
+// Presets stored in this table will have these fields, with the
 // type given by the type property, inside MongoDB
-const FreetSchema = new Schema<Freet>({
-  // The author userId
-  authorId: {
+const PresetSchema = new Schema<Preset>({
+  // The owner userId
+  ownerId: {
     // Use Types.ObjectId outside of the schema
     type: Schema.Types.ObjectId,
     required: true,
     ref: 'User'
   },
-  // The date the freet was created
-  dateCreated: {
-    type: Date,
-    required: true
-  },
-  // The content of the freet
-  content: {
+  // The name of the preset
+  name: {
     type: String,
     required: true
   },
-  // The date the freet was modified
-  dateModified: {
-    type: Date,
+  // The members of the preset
+  members: {
+    type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    required: true
+  },
+  // The settings of the preset
+  setting: {
+    type: Map,
+    of: Boolean,
     required: true
   }
 });
 
-const FreetModel = model<Freet>('Freet', FreetSchema);
-export default FreetModel;
+const PresetModel = model<Preset>('Preset', PresetSchema);
+export default PresetModel;

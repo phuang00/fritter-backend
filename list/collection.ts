@@ -45,11 +45,12 @@ class ListCollection {
   /**
    * Find a list by listId
    *
+   * @param {string} ownerId - The id of the owner of the list
    * @param {string} listName - The name of the list to find
    * @return {Promise<HydratedDocument<List>> | Promise<null> } - The list with the given listId, if any
    */
-   static async findOneByListName(listName: string): Promise<HydratedDocument<List>> {
-    return ListModel.findOne({listName: listName}).populate('ownerId').populate('members');
+   static async findOneByListName(ownerId: Types.ObjectId | string, listName: string): Promise<HydratedDocument<List>> {
+    return ListModel.findOne({ownerId: ownerId, listName: listName}).populate('ownerId').populate('members');
   }
 
   /**
@@ -58,7 +59,7 @@ class ListCollection {
    * @return {Promise<HydratedDocument<List>[]>} - An array of all of the lists
    */
   static async findAll(): Promise<Array<HydratedDocument<List>>> {
-    return ListModel.find({}).populate('ownerId').populate('members');
+    return ListModel.find({}).sort({listName: 1}).populate('ownerId').populate('members');
   }
 
   /**
@@ -85,7 +86,7 @@ class ListCollection {
     const list = await ListModel.findOne({_id: listId});
     if (name) { list.listName = name };
     if (privacy) { list.privacy = privacy };
-    if (members) { list.members as [Types.ObjectId] };
+    if (members) { list.members = members as [Types.ObjectId] };
     await list.save();
     return (await list.populate('ownerId')).populate('members');
   }

@@ -26,10 +26,10 @@ const isListExists = async (req: Request, res: Response, next: NextFunction) => 
  * Checks if all the contents of the list in req.body is given
  */
  const isListContentsNonempty = (req: Request, res: Response, next: NextFunction) => {
-  const {name, privacy, members} = req.body as {name: string, privacy: string, members: Array<string>};
+  const {name, privacy, members} = req.body as {name: string, privacy: string, members: string};
   if (!(name.trim() && privacy && members)) {
     res.status(404).json({
-      error: 'List content (name/privacy/member) is missing.'
+      error: 'List content (name/privacy/members) is missing.'
     });
     return;
   }
@@ -117,7 +117,7 @@ const isValidListModifier = async (req: Request, res: Response, next: NextFuncti
     return;
   }
 
-  const list = await ListCollection.findOneByListName(req.body.name as string);
+  const list = await ListCollection.findOneByListName(req.session.userId, req.body.name as string);
   if (list) {
     res.status(404).json({
       error: `A list with list name ${req.body.name as string} already exists.`

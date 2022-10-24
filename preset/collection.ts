@@ -1,101 +1,116 @@
 import type {HydratedDocument, Types} from 'mongoose';
-import type {Freet} from './model';
-import FreetModel from './model';
+import type {Preset} from './model';
+import PresetModel from './model';
 import UserCollection from '../user/collection';
 
 /**
- * This files contains a class that has the functionality to explore freets
- * stored in MongoDB, including adding, finding, updating, and deleting freets.
+ * This files contains a class that has the functionality to explore presets
+ * stored in MongoDB, including adding, finding, updating, and deleting presets.
  * Feel free to add additional operations in this file.
  *
- * Note: HydratedDocument<Freet> is the output of the FreetModel() constructor,
- * and contains all the information in Freet. https://mongoosejs.com/docs/typescript.html
+ * Note: HydratedDocument<Preset> is the output of the PresetModel() constructor,
+ * and contains all the information in Preset. https://mongoosejs.com/docs/typescript.html
  */
-class FreetCollection {
+class PresetCollection {
   /**
-   * Add a freet to the collection
+   * Add a preset to the collection
    *
-   * @param {string} authorId - The id of the author of the freet
-   * @param {string} content - The id of the content of the freet
-   * @return {Promise<HydratedDocument<Freet>>} - The newly created freet
+   * @param {string} ownerId - The id of the owner of the preset
+   * @param {string} name - The id of the name of the preset
+   * @param {Array<string>} members - The ids of the set of members of the list
+   * @param {Map<string, boolean>} setting - The settings of the preset
+   * @return {Promise<HydratedDocument<Preset>>} - The newly created preset
    */
-  static async addOne(authorId: Types.ObjectId | string, content: string): Promise<HydratedDocument<Freet>> {
-    const date = new Date();
-    const freet = new FreetModel({
-      authorId,
-      dateCreated: date,
-      content,
-      dateModified: date
+  static async addOne(ownerId: Types.ObjectId | string, name: string, members: Array<string> | Array<Types.ObjectId>, setting: Map<string, boolean>): Promise<HydratedDocument<Preset>> {
+    const preset = new PresetModel({
+      ownerId,
+      name,
+      members,
+      setting,
     });
-    await freet.save(); // Saves freet to MongoDB
-    return freet.populate('authorId');
+    await preset.save(); // Saves preset to MongoDB
+    return (await preset.populate('ownerId')).populate('members');
   }
 
   /**
-   * Find a freet by freetId
+   * Find a preset by presetId
    *
-   * @param {string} freetId - The id of the freet to find
-   * @return {Promise<HydratedDocument<Freet>> | Promise<null> } - The freet with the given freetId, if any
+   * @param {string} presetId - The id of the preset to find
+   * @return {Promise<HydratedDocument<Preset>> | Promise<null> } - The preset with the given presetId, if any
    */
-  static async findOne(freetId: Types.ObjectId | string): Promise<HydratedDocument<Freet>> {
-    return FreetModel.findOne({_id: freetId}).populate('authorId');
+  static async findOne(presetId: Types.ObjectId | string): Promise<HydratedDocument<Preset>> {
+    return PresetModel.findOne({_id: presetId}).populate('ownerId').populate('members');
   }
 
   /**
-   * Get all the freets in the database
+   * Find a preset by preset name and owner
    *
-   * @return {Promise<HydratedDocument<Freet>[]>} - An array of all of the freets
+   * @param {string} ownerId - The id of the owner of the preset
+   * @param {string} name - The name of the preset to find
+   * @return {Promise<HydratedDocument<Preset>> | Promise<null> } - The preset with the given presetId, if any
    */
-  static async findAll(): Promise<Array<HydratedDocument<Freet>>> {
-    // Retrieves freets and sorts them from most to least recent
-    return FreetModel.find({}).sort({dateModified: -1}).populate('authorId');
+   static async findOneByPresetName(ownerId: Types.ObjectId | string, name: string): Promise<HydratedDocument<Preset>> {
+    return PresetModel.findOne({ownerId: ownerId, name: name}).populate('ownerId').populate('members');
   }
 
   /**
-   * Get all the freets in by given author
+   * Get all the presets in the database
    *
-   * @param {string} username - The username of author of the freets
-   * @return {Promise<HydratedDocument<Freet>[]>} - An array of all of the freets
+   * @return {Promise<HydratedDocument<Preset>[]>} - An array of all of the presets
    */
-  static async findAllByUsername(username: string): Promise<Array<HydratedDocument<Freet>>> {
-    const author = await UserCollection.findOneByUsername(username);
-    return FreetModel.find({authorId: author._id}).populate('authorId');
+  static async findAll(): Promise<Array<HydratedDocument<Preset>>> {
+    // Retrieves presets and sorts them by alphabetical order
+    return PresetModel.find({}).sort({name: 1}).populate('ownerId').populate('members');
   }
 
   /**
-   * Update a freet with the new content
+   * Get all the presets in by given owner
    *
-   * @param {string} freetId - The id of the freet to be updated
-   * @param {string} content - The new content of the freet
-   * @return {Promise<HydratedDocument<Freet>>} - The newly updated freet
+   * @param {string} username - The username of owner of the presets
+   * @return {Promise<HydratedDocument<Preset>[]>} - An array of all of the presets
    */
-  static async updateOne(freetId: Types.ObjectId | string, content: string): Promise<HydratedDocument<Freet>> {
-    const freet = await FreetModel.findOne({_id: freetId});
-    freet.content = content;
-    freet.dateModified = new Date();
-    await freet.save();
-    return freet.populate('authorId');
+  static async findAllByUsername(username: string): Promise<Array<HydratedDocument<Preset>>> {
+    const owner = await UserCollection.findOneByUsername(username);
+    return PresetModel.find({ownerId: owner._id}).populate('ownerId').populate('members');
   }
 
   /**
-   * Delete a freet with given freetId.
+   * Update a preset with the new states
    *
-   * @param {string} freetId - The freetId of freet to delete
-   * @return {Promise<Boolean>} - true if the freet has been deleted, false otherwise
+   * @param {string} presetId - The id of the preset to be updated
+   * @param {string} name - The new name of the preset
+   * @param {Array<string>} members - The new members of the preset
+   * @param {Map<string, boolean>} setting - The new settings of the preset
+   * @return {Promise<HydratedDocument<Preset>>} - The newly updated preset
    */
-  static async deleteOne(freetId: Types.ObjectId | string): Promise<boolean> {
-    const freet = await FreetModel.deleteOne({_id: freetId});
-    return freet !== null;
+  static async updateOne(presetId: Types.ObjectId | string, name: string | undefined, members: Array<string> | Array<Types.ObjectId> | undefined, setting: Map<string, boolean> | undefined): Promise<HydratedDocument<Preset>> {
+    const preset = await PresetModel.findOne({_id: presetId});
+    if (name) { preset.name = name };
+    if (members) { preset.members = members as [Types.ObjectId] };
+    if (setting) { preset.setting = setting as Types.Map<boolean>};
+    await preset.save();
+    return (await preset.populate('ownerId')).populate('members');
   }
 
   /**
-   * Delete all the freets by the given author
+   * Delete a preset with given presetId.
    *
-   * @param {string} authorId - The id of author of freets
+   * @param {string} presetId - The presetId of preset to delete
+   * @return {Promise<Boolean>} - true if the preset has been deleted, false otherwise
    */
-  static async deleteMany(authorId: Types.ObjectId | string): Promise<void> {
-    await FreetModel.deleteMany({authorId});
+  static async deleteOne(presetId: Types.ObjectId | string): Promise<boolean> {
+    const preset = await PresetModel.deleteOne({_id: presetId});
+    return preset !== null;
+  }
+
+  /**
+   * Delete all the presets by the given owner
+   *
+   * @param {string} ownerId - The id of owner of presets
+   */
+  static async deleteMany(ownerId: Types.ObjectId | string): Promise<void> {
+    await PresetModel.deleteMany({ownerId});
   }
 }
 
-export default FreetCollection;
+export default PresetCollection;

@@ -1,48 +1,43 @@
 import type {HydratedDocument} from 'mongoose';
-import moment from 'moment';
-import type {Freet, PopulatedFreet} from '../freet/model';
+import type {Preset, PopulatedPreset} from '../preset/model';
 
-// Update this if you add a property to the Freet type!
-type FreetResponse = {
+// Update this if you add a property to the Preset type!
+type PresetResponse = {
   _id: string;
-  author: string;
-  dateCreated: string;
-  content: string;
-  dateModified: string;
+  owner: string;
+  name: string;
+  members: Array<string>;
+  setting: Array<Array<string | boolean>>;
 };
 
 /**
- * Encode a date as an unambiguous string
- *
- * @param {Date} date - A date object
- * @returns {string} - formatted date as string
- */
-const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:mm:ss a');
-
-/**
- * Transform a raw Freet object from the database into an object
+ * Transform a raw Preset object from the database into an object
  * with all the information needed by the frontend
  *
- * @param {HydratedDocument<Freet>} freet - A freet
- * @returns {FreetResponse} - The freet object formatted for the frontend
+ * @param {HydratedDocument<Preset>} preset - A preset
+ * @returns {PresetResponse} - The preset object formatted for the frontend
  */
-const constructFreetResponse = (freet: HydratedDocument<Freet>): FreetResponse => {
-  const freetCopy: PopulatedFreet = {
-    ...freet.toObject({
+const constructPresetResponse = (preset: HydratedDocument<Preset>): PresetResponse => {
+  const presetCopy: PopulatedPreset = {
+    ...preset.toObject({
       versionKey: false // Cosmetics; prevents returning of __v property
     })
   };
-  const {username} = freetCopy.authorId;
-  delete freetCopy.authorId;
+  const {username} = presetCopy.ownerId;
+  const members = presetCopy.members.map(user => user.username);
+  const setting = Array.from(presetCopy.setting);
+  delete presetCopy.ownerId;
+  delete presetCopy.members;
+  delete presetCopy.setting
   return {
-    ...freetCopy,
-    _id: freetCopy._id.toString(),
-    author: username,
-    dateCreated: formatDate(freet.dateCreated),
-    dateModified: formatDate(freet.dateModified)
+    ...presetCopy,
+    _id: presetCopy._id.toString(),
+    owner: username,
+    members: members,
+    setting: setting,
   };
 };
 
 export {
-  constructFreetResponse
+  constructPresetResponse
 };

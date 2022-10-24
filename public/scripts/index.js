@@ -57,6 +57,11 @@ const formsAndHandlers = {
   'create-list': createList,
   'edit-list': editList,
   'delete-list': deleteList,
+  'view-all-presets': viewAllPresets,
+  'view-presets-by-owner': viewPresetsByOwner,
+  'create-preset': createPreset,
+  'edit-preset': editPreset,
+  'delete-preset': deletePreset,
 };
 
 // Attach handlers to forms

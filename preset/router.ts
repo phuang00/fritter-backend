@@ -1,134 +1,148 @@
 import type {NextFunction, Request, Response} from 'express';
 import express from 'express';
-import FreetCollection from './collection';
+import PresetCollection from './collection';
+import UserCollection from '../user/collection';
 import * as userValidator from '../user/middleware';
-import * as freetValidator from '../freet/middleware';
+import * as presetValidator from '../preset/middleware';
 import * as util from './util';
 
 const router = express.Router();
 
 /**
- * Get all the freets
+ * Get all the presets
  *
- * @name GET /api/freets
+ * @name GET /api/presets
  *
- * @return {FreetResponse[]} - A list of all the freets sorted in descending
- *                      order by date modified
+ * @return {PresetResponse[]} - An array of presets sorted in increasing alphabetical order by preset name
  */
 /**
- * Get freets by author.
+ * Get presets by owner.
  *
- * @name GET /api/freets?authorId=id
+ * @name GET /api/presets?owner=username
  *
- * @return {FreetResponse[]} - An array of freets created by user with id, authorId
- * @throws {400} - If authorId is not given
- * @throws {404} - If no user has given authorId
+ * @return {PresetResponse[]} - An array of presets created by user with username, owner
+ * @throws {400} - If owner is not given
+ * @throws {404} - if owner is not a recognized username of any user
  *
  */
 router.get(
   '/',
   async (req: Request, res: Response, next: NextFunction) => {
-    // Check if authorId query parameter was supplied
-    if (req.query.author !== undefined) {
+    // Check if owner query parameter was supplied
+    if (req.query.owner !== undefined) {
       next();
       return;
     }
 
-    const allFreets = await FreetCollection.findAll();
-    const response = allFreets.map(util.constructFreetResponse);
+    const allPresets = await PresetCollection.findAll();
+    const response = allPresets.map(util.constructPresetResponse);
     res.status(200).json(response);
   },
   [
-    userValidator.isAuthorExists
+    userValidator.isOwnerExists
   ],
   async (req: Request, res: Response) => {
-    const authorFreets = await FreetCollection.findAllByUsername(req.query.author as string);
-    const response = authorFreets.map(util.constructFreetResponse);
+    const ownerPresets = await PresetCollection.findAllByUsername(req.query.owner as string);
+    const response = ownerPresets.map(util.constructPresetResponse);
     res.status(200).json(response);
   }
 );
 
 /**
- * Create a new freet.
+ * Create a new preset.
  *
- * @name POST /api/freets
+ * @name POST /api/presets
  *
- * @param {string} content - The content of the freet
- * @return {FreetResponse} - The created freet
+ * @param {string} name - The name of the preset
+ * @param {Array<string>} members - The members in the preset
+ * @param {Map<string, boolean>} setting - The settings of the preset
+ * @return {PresetResponse} - The created preset
  * @throws {403} - If the user is not logged in
- * @throws {400} - If the freet content is empty or a stream of empty spaces
- * @throws {413} - If the freet content is more than 140 characters long
+ * @throws {400} - If the preset content is empty or a stream of empty spaces
+ * @throws {413} - If the preset content is more than 140 characters long
  */
 router.post(
   '/',
   [
     userValidator.isUserLoggedIn,
-    freetValidator.isValidFreetContent
+    presetValidator.isPresetNameExists,
+    presetValidator.isPresetContentsNonempty,
+    presetValidator.isValidPresetContents,
   ],
   async (req: Request, res: Response) => {
-    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const freet = await FreetCollection.addOne(userId, req.body.content);
+    const ownerId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const memberIds = await Promise.all(req.body.members.split('\n').map(async (member: string) => {
+      const user = await UserCollection.findOneByUsername(member);
+      return user._id.toString();
+    }));
+    const setting = new Map<string, boolean>([["freet", req.body.freetSetting === 'true'], ["highlight", req.body.highlightSetting === 'true']]);
+    const preset = await PresetCollection.addOne(ownerId, req.body.name, memberIds, setting);
 
     res.status(201).json({
-      message: 'Your freet was created successfully.',
-      freet: util.constructFreetResponse(freet)
+      message: 'Your preset was created successfully.',
+      preset: util.constructPresetResponse(preset)
     });
   }
 );
 
 /**
- * Delete a freet
+ * Delete a preset
  *
- * @name DELETE /api/freets/:id
+ * @name DELETE /api/presets/:id
  *
  * @return {string} - A success message
  * @throws {403} - If the user is not logged in or is not the author of
- *                 the freet
- * @throws {404} - If the freetId is not valid
+ *                 the preset
+ * @throws {404} - If the presetId is not valid
  */
 router.delete(
-  '/:freetId?',
+  '/:presetId?',
   [
     userValidator.isUserLoggedIn,
-    freetValidator.isFreetExists,
-    freetValidator.isValidFreetModifier
+    presetValidator.isPresetExists,
+    presetValidator.isValidPresetModifier
   ],
   async (req: Request, res: Response) => {
-    await FreetCollection.deleteOne(req.params.freetId);
+    await PresetCollection.deleteOne(req.params.presetId);
     res.status(200).json({
-      message: 'Your freet was deleted successfully.'
+      message: 'Your preset was deleted successfully.'
     });
   }
 );
 
 /**
- * Modify a freet
+ * Modify a preset
  *
- * @name PUT /api/freets/:id
+ * @name PUT /api/presets/:id
  *
- * @param {string} content - the new content for the freet
- * @return {FreetResponse} - the updated freet
+ * @param {string} content - the new content for the preset
+ * @return {PresetResponse} - the updated preset
  * @throws {403} - if the user is not logged in or not the author of
- *                 of the freet
- * @throws {404} - If the freetId is not valid
- * @throws {400} - If the freet content is empty or a stream of empty spaces
- * @throws {413} - If the freet content is more than 140 characters long
+ *                 of the preset
+ * @throws {404} - If the presetId is not valid
+ * @throws {400} - If the preset content is empty or a stream of empty spaces
+ * @throws {413} - If the preset content is more than 140 characters long
  */
 router.put(
-  '/:freetId?',
+  '/:presetId?',
   [
     userValidator.isUserLoggedIn,
-    freetValidator.isFreetExists,
-    freetValidator.isValidFreetModifier,
-    freetValidator.isValidFreetContent
+    presetValidator.isPresetExists,
+    presetValidator.isValidPresetModifier,
+    presetValidator.isValidPresetContents
   ],
   async (req: Request, res: Response) => {
-    const freet = await FreetCollection.updateOne(req.params.freetId, req.body.content);
+    const memberIds = req.body.members ? await Promise.all(req.body.members.split('\n').map(async (member: string) => {
+      const user = await UserCollection.findOneByUsername(member);
+      return user._id;
+    })) : undefined;
+    const setting = req.body.freetSetting && req.body.highlightSetting ? new Map<string, boolean>([["freet", req.body.freetSetting === 'true'], ["highlight", req.body.highlightSetting === 'true']]) : undefined;
+    const preset = await PresetCollection.updateOne(req.params.presetId, req.body.name, memberIds, setting );
     res.status(200).json({
-      message: 'Your freet was updated successfully.',
-      freet: util.constructFreetResponse(freet)
+      message: 'Your preset was updated successfully.',
+      preset: util.constructPresetResponse(preset)
     });
   }
 );
 
-export {router as freetRouter};
+export {router as presetRouter};

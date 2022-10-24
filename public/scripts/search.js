@@ -6,38 +6,37 @@
  */
 
  function viewAllSearches(fields) {
-    fetch('/api/searches')
-      .then(showResponse)
-      .catch(showResponse);
-  }
-  
-  function viewSearchesByUser(fields) {
-    fetch(`/api/searches?author=${fields.user}`)
-      .then(showResponse)
-      .catch(showResponse);
-  }
-  
-  function createSearch(fields) {
-    fetch('/api/searches', {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
-      .then(showResponse)
-      .catch(showResponse);
-  }
-  
-  function editSearch(fields) {
-    fetch(`/api/searches/${fields.id}`, {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
-      .then(showResponse)
-      .catch(showResponse);
-  }
-  
-  function deleteSearch(fields) {
-    fetch(`/api/searches/${fields.id}`, {method: 'DELETE'})
-      .then(showResponse)
-      .catch(showResponse);
-  }
+  fetch('/api/searches')
+    .then(showResponse)
+    .catch(showResponse);
+}
 
-  function deleteSearchesByUser(fields) {
-    fetch(`/api/searches/user/${fields.user}`, {method: 'DELETE'})
-      .then(showResponse)
-      .catch(showResponse);
-  }
-  
+function viewSearchesByUser(fields) {
+  fetch(`/api/searches?author=${fields.user}`)
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function createSearch(fields) {
+  fetch('/api/searches', {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function editSearch(fields) {
+  fetch(`/api/searches/${fields.id}`, {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function deleteSearch(fields) {
+  fetch(`/api/searches/${fields.id}`, {method: 'DELETE'})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function deleteSearchesByUser(fields) {
+  fetch(`/api/searches/user/${fields.user}`, {method: 'DELETE'})
+    .then(showResponse)
+    .catch(showResponse);
+}

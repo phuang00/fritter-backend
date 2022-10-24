@@ -10,6 +10,7 @@
   <script src="/scripts/search.js"></script>
   <script src="/scripts/highlight.js"></script>
   <script src="/scripts/list.js"></script>
+  <script src="/scripts/preset.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
 
@@ -167,153 +168,234 @@
           <input type="submit" value="View All Highlights">
         </form>
 
-      <form id="view-highlights-by-author">
-        <h3>View Highlights By Author</h3>
-        <div>
-          <label for="author">Author:</label>
-          <input id="author" name="author">
-        </div>
-        <input type="submit" value="View Highlights By Author">
-      </form>
+        <form id="view-highlights-by-author">
+          <h3>View Highlights By Author</h3>
+          <div>
+            <label for="author">Author:</label>
+            <input id="author" name="author">
+          </div>
+          <input type="submit" value="View Highlights By Author">
+        </form>
 
-      <form id="create-highlight">
-        <h3>Create Highlight</h3>
-        <div>
-          <label for="freetId">Freet ID:</label>
-          <input id="freetId" name="freetId">
-        </div>
-        <div>
-          <input type="radio" id="true" name="highlighted" value="true" required>
-          <label for="true">True</label>
-          <input type="radio" id="false" name="highlighted" value="false" required>
-          <label for="false">False</label>
-        </div>
-        <input type="submit" value="Create Highlight">
-      </form>
+        <form id="create-highlight">
+          <h3>Create Highlight</h3>
+          <div>
+            <label for="freetId">Freet ID:</label>
+            <input id="freetId" name="freetId">
+          </div>
+          <div>
+            <input type="radio" id="true" name="highlighted" value="true" required>
+            <label for="true">True</label>
+            <input type="radio" id="false" name="highlighted" value="false" required>
+            <label for="false">False</label>
+          </div>
+          <input type="submit" value="Create Highlight">
+        </form>
 
-      <form id="update-highlight">
-        <h3>Update Highlight</h3>
-        <div>
-          <label for="id">ID:</label>
-          <input id="id" name="id">
-        </div>
-        <div>
-          <input type="radio" id="true" name="highlighted" value="true" required>
-          <label for="true">True</label>
-          <input type="radio" id="false" name="highlighted" value="false" required>
-          <label for="false">False</label>
-        </div>
-        <input type="submit" value="Update Highlight">
-      </form>
+        <form id="update-highlight">
+          <h3>Update Highlight</h3>
+          <div>
+            <label for="id">ID:</label>
+            <input id="id" name="id">
+          </div>
+          <div>
+            <input type="radio" id="true" name="highlighted" value="true" required>
+            <label for="true">True</label>
+            <input type="radio" id="false" name="highlighted" value="false" required>
+            <label for="false">False</label>
+          </div>
+          <input type="submit" value="Update Highlight">
+        </form>
 
-      <form id="update-highlight-by-freet">
-        <h3>Update Highlight by Freet ID</h3>
-        <div>
-          <label for="id">ID:</label>
-          <input id="id" name="id">
-        </div>
-        <div>
-          <input type="radio" id="true" name="highlighted" value="true" required>
-          <label for="true">True</label>
-          <input type="radio" id="false" name="highlighted" value="false" required>
-          <label for="false">False</label>
-        </div>
-        <input type="submit" value="Update Highlight by Freet ID">
-      </form>
+        <form id="update-highlight-by-freet">
+          <h3>Update Highlight by Freet ID</h3>
+          <div>
+            <label for="id">ID:</label>
+            <input id="id" name="id">
+          </div>
+          <div>
+            <input type="radio" id="true" name="highlighted" value="true" required>
+            <label for="true">True</label>
+            <input type="radio" id="false" name="highlighted" value="false" required>
+            <label for="false">False</label>
+          </div>
+          <input type="submit" value="Update Highlight by Freet ID">
+        </form>
 
-      <form id="delete-highlight">
-        <h3>Delete Highlight</h3>
-        <div>
-          <label for="id">ID:</label>
-          <input id="id" name="id">
-        </div>
-        <input type="submit" value="Delete Highlight">
-      </form>
+        <form id="delete-highlight">
+          <h3>Delete Highlight</h3>
+          <div>
+            <label for="id">ID:</label>
+            <input id="id" name="id">
+          </div>
+          <input type="submit" value="Delete Highlight">
+        </form>
 
-      <form id="delete-highlight-by-freet">
-        <h3>Delete Highlight by Freet ID</h3>
-        <div>
-          <label for="id">ID:</label>
-          <input id="id" name="id">
-        </div>
-        <input type="submit" value="Delete Highlight by Freet ID">
-      </form>
+        <form id="delete-highlight-by-freet">
+          <h3>Delete Highlight by Freet ID</h3>
+          <div>
+            <label for="id">ID:</label>
+            <input id="id" name="id">
+          </div>
+          <input type="submit" value="Delete Highlight by Freet ID">
+        </form>
 
-      <form id="delete-highlights">
-        <h3>Delete Highlights By Author</h3>
-        <div>
-          <label for="author">Author:</label>
-          <input id="author" name="author">
-        </div>
-        <input type="submit" value="Delete Highlights by Author">
-      </form>
+        <form id="delete-highlights">
+          <h3>Delete Highlights By Author</h3>
+          <div>
+            <label for="author">Author:</label>
+            <input id="author" name="author">
+          </div>
+          <input type="submit" value="Delete Highlights by Author">
+        </form>
 
-      <form id="view-all-lists">
-        <h3>View All Lists</h3>
-        <input type="submit" value="View All Lists">
-      </form>
+        <form id="view-all-lists">
+          <h3>View All Lists</h3>
+          <input type="submit" value="View All Lists">
+        </form>
 
-    <form id="view-lists-by-owner">
-      <h3>View Freets By Owner</h3>
-      <div>
-        <label for="owner">Owner:</label>
-        <input id="owner" name="owner">
-      </div>
-      <input type="submit" value="View Lists By Owner">
-    </form>
+        <form id="view-lists-by-owner">
+          <h3>View Freets By Owner</h3>
+          <div>
+            <label for="owner">Owner:</label>
+            <input id="owner" name="owner">
+          </div>
+          <input type="submit" value="View Lists By Owner">
+        </form>
 
-    <form id="create-list">
-      <h3>Create List</h3>
-      <div>
-        <label for="name">Name:</label>
-        <input id="name" name="name"></input>
-      </div>
-      <div>
-        <label for="privacy">Privacy:</label>
-        <input type="radio" id="private" name="privacy" value="private" required>
-        <label for="private">private</label>
-        <input type="radio" id="public" name="privacy" value="public" required>
-        <label for="public">public</label>
-      </div>
-      <div>
-        <label for="members">Members (separated by newlines):</label>
-        <textarea id="members" name="members"></textarea>
-      </div>
-      <input type="submit" value="Create List">
-    </form>
+        <form id="create-list">
+          <h3>Create List</h3>
+          <div>
+            <label for="name">Name:</label>
+            <input id="name" name="name"></input>
+          </div>
+          <div>
+            <label for="privacy">Privacy:</label>
+            <input type="radio" id="private" name="privacy" value="private" required>
+            <label for="private">private</label>
+            <input type="radio" id="public" name="privacy" value="public" required>
+            <label for="public">public</label>
+          </div>
+          <div>
+            <label for="members">Members (separated by newlines):</label>
+            <textarea id="members" name="members"></textarea>
+          </div>
+          <input type="submit" value="Create List">
+        </form>
 
-    <form id="edit-list">
-      <h3>Edit List</h3>
-      <div>
-        <label for="id">ID:</label>
-        <input id="id" name="id">
-      </div>
-      <div>
-        <label for="name">Name:</label>
-        <input id="name" name="name"></input>
-      </div>
-      <div>
-        <label for="privacy">Privacy:</label>
-        <input type="radio" id="private" name="privacy" value="private" required>
-        <label for="private">private</label>
-        <input type="radio" id="public" name="privacy" value="public" required>
-        <label for="public">public</label>
-      </div>
-      <div>
-        <label for="members">Members (separated by newlines):</label>
-        <textarea id="members" name="members"></textarea>
-      </div>
-      <input type="submit" value="Edit List">
-    </form>
+        <form id="edit-list">
+          <h3>Edit List</h3>
+          <div>
+            <label for="id">ID:</label>
+            <input id="id" name="id">
+          </div>
+          <div>
+            <label for="name">Name:</label>
+            <input id="name" name="name"></input>
+          </div>
+          <div>
+            <label for="privacy">Privacy:</label>
+            <input type="radio" id="private" name="privacy" value="private" required>
+            <label for="private">private</label>
+            <input type="radio" id="public" name="privacy" value="public" required>
+            <label for="public">public</label>
+          </div>
+          <div>
+            <label for="members">Members (separated by newlines):</label>
+            <textarea id="members" name="members"></textarea>
+          </div>
+          <input type="submit" value="Edit List">
+        </form>
 
-    <form id="delete-list">
-      <h3>Delete List</h3>
-      <div>
-        <label for="id">ID:</label>
-        <input id="id" name="id">
-      </div>
-      <input type="submit" value="Delete List">
-    </form>
+        <form id="delete-list">
+          <h3>Delete List</h3>
+          <div>
+            <label for="id">ID:</label>
+            <input id="id" name="id">
+          </div>
+          <input type="submit" value="Delete List">
+        </form>
+
+        <form id="view-all-presets">
+          <h3>View All Notification Presets</h3>
+          <input type="submit" value="View All Notification Presets">
+        </form>
+
+        <form id="view-presets-by-owner">
+          <h3>View Notification Presets By Owner</h3>
+          <div>
+            <label for="owner">Owner:</label>
+            <input id="owner" name="owner">
+          </div>
+          <input type="submit" value="View Notification Presets By Owner">
+        </form>
+
+        <form id="create-preset">
+          <h3>Create Preset</h3>
+          <div>
+            <label for="name">Name:</label>
+            <input id="name" name="name"></input>
+          </div>
+          <div>
+            <label for="members">Members (separated by newlines):</label>
+            <textarea id="members" name="members"></textarea>
+          </div>
+          <div>
+            <label for="freetSetting">Freet Setting:</label>
+            <input type="radio" id="true" name="freetSetting" value="true" required>
+            <label for="true">On</label>
+            <input type="radio" id="false" name="freetSetting" value="true" required>
+            <label for="false">Off</label>
+          </div>
+          <div>
+            <label for="highlightSetting">Highlight Setting:</label>
+            <input type="radio" id="true" name="highlightSetting" value="true" required>
+            <label for="true">On</label>
+            <input type="radio" id="false" name="highlightSetting" value="true" required>
+            <label for="false">Off</label>
+          </div>
+          <input type="submit" value="Create Notification Preset">
+        </form>
+
+        <form id="edit-preset">
+          <h3>Edit Preset</h3>
+          <div>
+            <label for="id">ID:</label>
+            <input id="id" name="id">
+          </div>
+          <div>
+            <label for="name">Name:</label>
+            <input id="name" name="name"></input>
+          </div>
+          <div>
+            <label for="members">Members (separated by newlines):</label>
+            <textarea id="members" name="members"></textarea>
+          </div>
+          <div>
+            <label for="freetSetting">Freet Setting:</label>
+            <input type="radio" id="true" name="freetSetting" value="true">
+            <label for="true">On</label>
+            <input type="radio" id="false" name="freetSetting" value="true">
+            <label for="false">Off</label>
+          </div>
+          <div>
+            <label for="highlightSetting">Highlight Setting:</label>
+            <input type="radio" id="true" name="highlightSetting" value="true">
+            <label for="true">On</label>
+            <input type="radio" id="false" name="highlightSetting" value="true">
+            <label for="false">Off</label>
+          </div>
+          <input type="submit" value="Edit Preset">
+        </form>
+
+        <form id="delete-preset">
+          <h3>Delete Preset</h3>
+          <div>
+            <label for="id">ID:</label>
+            <input id="id" name="id">
+          </div>
+          <input type="submit" value="Delete Preset">
+        </form>
 
       </div>
     </section>
