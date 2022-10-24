@@ -9,6 +9,7 @@
   <script src="/scripts/user.js"></script>
   <script src="/scripts/search.js"></script>
   <script src="/scripts/highlight.js"></script>
+  <script src="/scripts/list.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
 
@@ -246,6 +247,73 @@
         </div>
         <input type="submit" value="Delete Highlights by Author">
       </form>
+
+      <form id="view-all-lists">
+        <h3>View All Lists</h3>
+        <input type="submit" value="View All Lists">
+      </form>
+
+    <form id="view-lists-by-owner">
+      <h3>View Freets By Owner</h3>
+      <div>
+        <label for="owner">Owner:</label>
+        <input id="owner" name="owner">
+      </div>
+      <input type="submit" value="View Lists By Owner">
+    </form>
+
+    <form id="create-list">
+      <h3>Create List</h3>
+      <div>
+        <label for="name">Name:</label>
+        <input id="name" name="name"></input>
+      </div>
+      <div>
+        <label for="privacy">Privacy:</label>
+        <input type="radio" id="private" name="privacy" value="private" required>
+        <label for="private">private</label>
+        <input type="radio" id="public" name="privacy" value="public" required>
+        <label for="public">public</label>
+      </div>
+      <div>
+        <label for="members">Members (separated by newlines):</label>
+        <textarea id="members" name="members"></textarea>
+      </div>
+      <input type="submit" value="Create List">
+    </form>
+
+    <form id="edit-list">
+      <h3>Edit List</h3>
+      <div>
+        <label for="id">ID:</label>
+        <input id="id" name="id">
+      </div>
+      <div>
+        <label for="name">Name:</label>
+        <input id="name" name="name"></input>
+      </div>
+      <div>
+        <label for="privacy">Privacy:</label>
+        <input type="radio" id="private" name="privacy" value="private" required>
+        <label for="private">private</label>
+        <input type="radio" id="public" name="privacy" value="public" required>
+        <label for="public">public</label>
+      </div>
+      <div>
+        <label for="members">Members (separated by newlines):</label>
+        <textarea id="members" name="members"></textarea>
+      </div>
+      <input type="submit" value="Edit List">
+    </form>
+
+    <form id="delete-list">
+      <h3>Delete List</h3>
+      <div>
+        <label for="id">ID:</label>
+        <input id="id" name="id">
+      </div>
+      <input type="submit" value="Delete List">
+    </form>
 
       </div>
     </section>

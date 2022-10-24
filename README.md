@@ -319,7 +319,7 @@ This renders the `index.html` file that will be used to interact with the backen
 **Returns**
 - An array of lists sorted in increasing alphabetical order by list name
 
-#### `GET /api/lists?author=USERNAME` - Get lists by owner
+#### `GET /api/lists?owner=USERNAME` - Get lists by owner
 
 **Returns**
 - An array of lists created by user with username `author`
@@ -334,6 +334,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - `name` _{string}_ - The name of the list
 - `privacy` _{enum}_ - Whether the list is public or private
+- `members` _{List\[User\]}_ - The new set of members in the list
 
 **Returns**
 
@@ -365,7 +366,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - `name` _{string}_ - The new name of the list
 - `privacy` _{enum}_ - The new privacy setting of the list
-- `members` _{List\[Set\]}_ - The new set of members in the list
+- `members` _{List\[User\]}_ - The new set of members in the list
 
 **Returns**
 

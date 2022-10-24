@@ -52,6 +52,11 @@ const formsAndHandlers = {
   'delete-highlight': deleteHighlight,
   'delete-highlight-by-freet': deleteHighlightByFreet,
   'delete-highlights': deleteHighlightsByUser,
+  'view-all-lists': viewAllLists,
+  'view-lists-by-owner': viewListsByOwner,
+  'create-list': createList,
+  'edit-list': editList,
+  'delete-list': deleteList,
 };
 
 // Attach handlers to forms
